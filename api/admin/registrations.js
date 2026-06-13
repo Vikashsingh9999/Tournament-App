@@ -1,9 +1,8 @@
-const { createClient } = require('@libsql/client');
+const fs = require('fs');
+const path = require('path');
 const jwt = require('jsonwebtoken');
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+const FILE_PATH = path.join(process.cwd(), 'registrations.json');
 
 module.exports = async (req, res) => {
   // CORS setup
@@ -38,46 +37,21 @@ module.exports = async (req, res) => {
     return res.status(403).json({ success: false, message: "Invalid or expired authorization token." });
   }
 
-  // 2. Fetch registrations from Turso DB
-  const dbUrl = process.env.LIBSQL_DB_URL;
-  const dbAuthToken = process.env.LIBSQL_DB_AUTH_TOKEN;
-
-  if (!dbUrl) {
-    return res.status(500).json({ success: false, message: "Server configuration error: Database URL not set." });
-  }
-
-  const dbClient = createClient({ url: dbUrl, authToken: dbAuthToken });
-
+  // 2. Read registrations from local JSON file
   try {
-    // Check if table exists first by querying sqlite_master
-    const tableCheck = await dbClient.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='registrations'");
-    
-    if (tableCheck.rows.length === 0) {
-      // Table doesn't exist yet, return empty list
-      return res.status(200).json({ success: true, data: [] });
+    let registrations = [];
+    if (fs.existsSync(FILE_PATH)) {
+      const fileContent = fs.readFileSync(FILE_PATH, 'utf8');
+      registrations = JSON.parse(fileContent);
     }
-
-    const results = await dbClient.execute("SELECT * FROM registrations ORDER BY created_at DESC");
-    
-    // Map rows properly to list of objects
-    const data = results.rows.map(row => {
-      // Return standard object mappings
-      const item = {};
-      results.columns.forEach((col, idx) => {
-        item[col] = row[idx];
-      });
-      return item;
-    });
 
     return res.status(200).json({
       success: true,
-      data
+      data: registrations
     });
 
-  } catch (dbErr) {
-    console.error("Database query error:", dbErr);
-    return res.status(500).json({ success: false, message: "Database lookup failed." });
-  } finally {
-    dbClient.close();
+  } catch (err) {
+    console.error("Local file query registrations error:", err);
+    return res.status(500).json({ success: false, message: "Failed to read database records." });
   }
 };

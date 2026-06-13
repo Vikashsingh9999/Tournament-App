@@ -350,8 +350,8 @@ function openDetailsModal(player) {
     idDl.href = player.id_proof_url;
     idDl.classList.remove("hidden");
 
-    // Check if it's pdf via url naming or let Cloudinary handle
-    if (player.id_proof_url.toLowerCase().endsWith(".pdf")) {
+    // Check if it's pdf via url naming or base64 format signature
+    if (player.id_proof_url.toLowerCase().endsWith(".pdf") || player.id_proof_url.startsWith("data:application/pdf")) {
       idImg.classList.add("hidden");
       idPdf.classList.remove("hidden");
     } else {

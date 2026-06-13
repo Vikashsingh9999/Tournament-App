@@ -1,10 +1,9 @@
-const { createClient } = require('@libsql/client');
+const fs = require('fs');
+const path = require('path');
 const jwt = require('jsonwebtoken');
 const XLSX = require('xlsx');
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+const FILE_PATH = path.join(process.cwd(), 'registrations.json');
 
 module.exports = async (req, res) => {
   // CORS setup
@@ -39,35 +38,25 @@ module.exports = async (req, res) => {
     return res.status(403).json({ success: false, message: "Invalid or expired authorization token." });
   }
 
-  // 2. Query Registrations from Turso DB
-  const dbUrl = process.env.LIBSQL_DB_URL;
-  const dbAuthToken = process.env.LIBSQL_DB_AUTH_TOKEN;
-
-  if (!dbUrl) {
-    return res.status(500).json({ success: false, message: "Server configuration error: Database URL not set." });
-  }
-
-  const dbClient = createClient({ url: dbUrl, authToken: dbAuthToken });
-
+  // 2. Read registrations from local JSON file
   try {
-    const tableCheck = await dbClient.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='registrations'");
-    
     let registrations = [];
-    if (tableCheck.rows.length > 0) {
-      const results = await dbClient.execute("SELECT * FROM registrations ORDER BY created_at ASC");
-      
-      registrations = results.rows.map(row => {
-        const item = {};
-        results.columns.forEach((col, idx) => {
-          item[col] = row[idx];
-        });
-        return item;
-      });
+    if (fs.existsSync(FILE_PATH)) {
+      const fileContent = fs.readFileSync(FILE_PATH, 'utf8');
+      registrations = JSON.parse(fileContent);
     }
 
-    // 3. Format Data rows for sheet
+    // 3. Format Data rows for sheet (summarize base64 files to keep Excel file size lightweight)
     const sheetData = registrations.map(reg => {
       const middleNameText = reg.middle_name ? ` ${reg.middle_name}` : '';
+      
+      let idProofDesc = "No File";
+      if (reg.id_proof_url) {
+        idProofDesc = reg.id_proof_url.startsWith("data:application/pdf") ? "Base64 PDF Document" : "Base64 Image Document";
+      }
+
+      let receiptDesc = reg.payment_receipt_url ? "Base64 Screenshot Image" : "No File";
+
       return {
         "Registration ID": reg.id,
         "First Name": reg.first_name,
@@ -91,8 +80,8 @@ module.exports = async (req, res) => {
         "Emergency Contact Name": `${reg.emergency_first} ${reg.emergency_last}`,
         "Emergency Contact Mobile": reg.emergency_mobile,
         "Medical Notes": reg.medical_conditions || "None Declared",
-        "ID Proof Link": reg.id_proof_url || "No File",
-        "Payment Receipt Link": reg.payment_receipt_url || "No File",
+        "ID Proof File": idProofDesc,
+        "Payment Receipt File": receiptDesc,
         "Registration Date": reg.created_at ? new Date(reg.created_at).toLocaleString('en-IN') : 'N/A'
       };
     });
@@ -127,10 +116,8 @@ module.exports = async (req, res) => {
     
     return res.status(200).send(excelBuffer);
 
-  } catch (dbErr) {
-    console.error("Database query export error:", dbErr);
+  } catch (err) {
+    console.error("Local file query export error:", err);
     return res.status(500).json({ success: false, message: "Export failed due to server error." });
-  } finally {
-    dbClient.close();
   }
 };
