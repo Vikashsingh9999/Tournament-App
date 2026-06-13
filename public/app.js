@@ -303,7 +303,7 @@ function markValid(element) {
    FILE INPUT & BASE64 PREVIEW PROCESSING
    ---------------------------------------------------- */
 function initFileInputs() {
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+  const MAX_FILE_SIZE = 1.5 * 1024 * 1024; // 1.5MB limit (prevents Vercel 4.5MB payload limit errors)
   
   // ID PROOF ELEMENTS
   const idFileInput = document.getElementById("id_proof_file");
@@ -330,7 +330,7 @@ function initFileInputs() {
     if (!file) return;
 
     if (file.size > MAX_FILE_SIZE) {
-      showToast("ID proof file size exceeds the 5MB limit.", "error");
+      showToast("ID proof file size exceeds the 1.5MB limit.", "error");
       idFileInput.value = "";
       return;
     }
@@ -379,7 +379,7 @@ function initFileInputs() {
     if (!file) return;
 
     if (file.size > MAX_FILE_SIZE) {
-      showToast("Receipt file size exceeds the 5MB limit.", "error");
+      showToast("Receipt file size exceeds the 1.5MB limit.", "error");
       receiptFileInput.value = "";
       return;
     }
@@ -491,7 +491,17 @@ function initFormSubmission() {
         body: JSON.stringify(data)
       });
 
-      const result = await response.json();
+      let result;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        result = await response.json();
+      } else {
+        const text = await response.text();
+        if (response.status === 413) {
+          throw new Error("File sizes are too large! Please compress or select files under 1.5MB each.");
+        }
+        throw new Error(text || `Server error: status ${response.status}`);
+      }
 
       if (response.ok && result.success) {
         // Success
