@@ -1,8 +1,10 @@
-const fs = require('fs');
-const path = require('path');
+const { createClient } = require('@libsql/client');
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 const DEADLINE_ISO = "2026-07-08T23:59:00+05:30";
-const FILE_PATH = path.join(process.cwd(), 'registrations.json');
 
 module.exports = async (req, res) => {
   // CORS setup
@@ -55,7 +57,7 @@ module.exports = async (req, res) => {
     payment_receipt // { base64, name, type }
   } = req.body;
 
-  // Validate fields
+  // Simple validation check
   if (!first_name || !last_name || !dob || !gender || !mobile || !email || 
       !address_line1 || !city || !state || !postal_code || !team_name || 
       !eligible_area || !player_role || !batting_hand || !bowling_arm || 
@@ -64,63 +66,101 @@ module.exports = async (req, res) => {
     return res.status(400).json({ success: false, message: "Missing required fields or uploaded documents." });
   }
 
-  try {
-    // 2. Read existing registrations list from JSON file
-    let registrations = [];
-    if (fs.existsSync(FILE_PATH)) {
-      try {
-        const fileContent = fs.readFileSync(FILE_PATH, 'utf8');
-        registrations = JSON.parse(fileContent);
-      } catch (parseErr) {
-        console.error("Error parsing registrations.json, starting empty:", parseErr);
-        registrations = [];
-      }
-    }
+  const dbUrl = process.env.LIBSQL_DB_URL;
+  const dbAuthToken = process.env.LIBSQL_DB_AUTH_TOKEN;
 
-    // 3. Generate sequential registration ID (CC-001, CC-002, etc.)
+  if (!dbUrl) {
+    return res.status(500).json({ success: false, message: "Server configuration error: Database URL not set." });
+  }
+
+  const dbClient = createClient({ url: dbUrl, authToken: dbAuthToken });
+
+  try {
+    // 2. Auto Create Table on first run if it doesn't exist
+    await dbClient.execute(`
+      CREATE TABLE IF NOT EXISTS registrations (
+        id TEXT PRIMARY KEY,
+        first_name TEXT NOT NULL,
+        middle_name TEXT,
+        last_name TEXT NOT NULL,
+        dob TEXT NOT NULL,
+        gender TEXT NOT NULL,
+        mobile TEXT NOT NULL,
+        email TEXT NOT NULL,
+        address_line1 TEXT NOT NULL,
+        address_line2 TEXT,
+        city TEXT NOT NULL,
+        state TEXT NOT NULL,
+        postal_code TEXT NOT NULL,
+        team_name TEXT NOT NULL,
+        eligible_area TEXT NOT NULL,
+        player_role TEXT NOT NULL,
+        batting_hand TEXT NOT NULL,
+        bowling_arm TEXT NOT NULL,
+        bowling_type TEXT NOT NULL,
+        emergency_first TEXT NOT NULL,
+        emergency_last TEXT NOT NULL,
+        emergency_mobile TEXT NOT NULL,
+        id_proof_url TEXT,            -- Holds raw Base64 data URL
+        medical_conditions TEXT,
+        payment_receipt_url TEXT,     -- Holds raw Base64 data URL
+        created_at TEXT DEFAULT (datetime('now'))
+      );
+    `);
+
+    // 3. Compute unique registration ID: CC-001, CC-002, etc.
+    const lastRegResult = await dbClient.execute("SELECT id FROM registrations ORDER BY ROWID DESC LIMIT 1");
     let nextNum = 1;
-    if (registrations.length > 0) {
-      const ids = registrations.map(r => {
-        const match = r.id.match(/CC-(\d+)/);
-        return match ? parseInt(match[1], 10) : 0;
-      });
-      nextNum = Math.max(...ids) + 1;
+    if (lastRegResult.rows.length > 0) {
+      const lastId = lastRegResult.rows[0].id;
+      const match = lastId.match(/CC-(\d+)/);
+      if (match) {
+        nextNum = parseInt(match[1], 10) + 1;
+      }
     }
     const registrationId = `CC-${String(nextNum).padStart(3, '0')}`;
 
-    // 4. Create new participant object storing base64 strings directly in URL properties
-    const newRegistration = {
-      id: registrationId,
-      first_name: first_name.trim(),
-      middle_name: middle_name ? middle_name.trim() : null,
-      last_name: last_name.trim(),
-      dob,
-      gender,
-      mobile: mobile.trim(),
-      email: email.trim(),
-      address_line1: address_line1.trim(),
-      address_line2: address_line2 ? address_line2.trim() : null,
-      city: city.trim(),
-      state: state.trim(),
-      postal_code: postal_code.trim(),
-      team_name: team_name.trim(),
-      eligible_area,
-      player_role,
-      batting_hand,
-      bowling_arm,
-      bowling_type,
-      emergency_first: emergency_first.trim(),
-      emergency_last: emergency_last.trim(),
-      emergency_mobile: emergency_mobile.trim(),
-      id_proof_url: id_proof.base64, // Directly save Base64 data URL
-      medical_conditions: medical_conditions ? medical_conditions.trim() : null,
-      payment_receipt_url: payment_receipt.base64, // Directly save Base64 data URL
-      created_at: new Date().toISOString()
-    };
+    // 4. Save Base64 directly (no Cloudinary required)
+    const idProofUrl = id_proof.base64;
+    const paymentReceiptUrl = payment_receipt.base64;
 
-    // 5. Append and write back to file
-    registrations.push(newRegistration);
-    fs.writeFileSync(FILE_PATH, JSON.stringify(registrations, null, 2), 'utf8');
+    // 5. Insert details into Turso DB
+    await dbClient.execute({
+      sql: `INSERT INTO registrations (
+        id, first_name, middle_name, last_name, dob, gender, mobile, email,
+        address_line1, address_line2, city, state, postal_code, team_name,
+        eligible_area, player_role, batting_hand, bowling_arm, bowling_type,
+        emergency_first, emergency_last, emergency_mobile, id_proof_url,
+        medical_conditions, payment_receipt_url
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      args: [
+        registrationId,
+        first_name.trim(),
+        middle_name ? middle_name.trim() : null,
+        last_name.trim(),
+        dob,
+        gender,
+        mobile.trim(),
+        email.trim(),
+        address_line1.trim(),
+        address_line2 ? address_line2.trim() : null,
+        city.trim(),
+        state.trim(),
+        postal_code.trim(),
+        team_name.trim(),
+        eligible_area,
+        player_role,
+        batting_hand,
+        bowling_arm,
+        bowling_type,
+        emergency_first.trim(),
+        emergency_last.trim(),
+        emergency_mobile.trim(),
+        idProofUrl,
+        medical_conditions ? medical_conditions.trim() : null,
+        paymentReceiptUrl
+      ]
+    });
 
     return res.status(200).json({
       success: true,
@@ -128,8 +168,10 @@ module.exports = async (req, res) => {
       registrationId
     });
 
-  } catch (err) {
-    console.error("Local file database execution error:", err);
-    return res.status(500).json({ success: false, message: "Internal Server Error: Failed to write to JSON database." });
+  } catch (dbErr) {
+    console.error("Turso database execution error:", dbErr);
+    return res.status(500).json({ success: false, message: "Internal Server Error: Database transaction failed." });
+  } finally {
+    dbClient.close();
   }
 };

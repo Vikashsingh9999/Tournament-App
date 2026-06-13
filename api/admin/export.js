@@ -1,9 +1,10 @@
-const fs = require('fs');
-const path = require('path');
+const { createClient } = require('@libsql/client');
 const jwt = require('jsonwebtoken');
 const XLSX = require('xlsx');
 
-const FILE_PATH = path.join(process.cwd(), 'registrations.json');
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 module.exports = async (req, res) => {
   // CORS setup
@@ -38,12 +39,30 @@ module.exports = async (req, res) => {
     return res.status(403).json({ success: false, message: "Invalid or expired authorization token." });
   }
 
-  // 2. Read registrations from local JSON file
+  // 2. Query Registrations from Turso DB
+  const dbUrl = process.env.LIBSQL_DB_URL;
+  const dbAuthToken = process.env.LIBSQL_DB_AUTH_TOKEN;
+
+  if (!dbUrl) {
+    return res.status(500).json({ success: false, message: "Server configuration error: Database URL not set." });
+  }
+
+  const dbClient = createClient({ url: dbUrl, authToken: dbAuthToken });
+
   try {
+    const tableCheck = await dbClient.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='registrations'");
+    
     let registrations = [];
-    if (fs.existsSync(FILE_PATH)) {
-      const fileContent = fs.readFileSync(FILE_PATH, 'utf8');
-      registrations = JSON.parse(fileContent);
+    if (tableCheck.rows.length > 0) {
+      const results = await dbClient.execute("SELECT * FROM registrations ORDER BY created_at ASC");
+      
+      registrations = results.rows.map(row => {
+        const item = {};
+        results.columns.forEach((col, idx) => {
+          item[col] = row[idx];
+        });
+        return item;
+      });
     }
 
     // 3. Format Data rows for sheet (summarize base64 files to keep Excel file size lightweight)
@@ -117,7 +136,9 @@ module.exports = async (req, res) => {
     return res.status(200).send(excelBuffer);
 
   } catch (err) {
-    console.error("Local file query export error:", err);
+    console.error("Turso database query export error:", err);
     return res.status(500).json({ success: false, message: "Export failed due to server error." });
+  } finally {
+    dbClient.close();
   }
 };
