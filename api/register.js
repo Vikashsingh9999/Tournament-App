@@ -101,9 +101,9 @@ module.exports = async (req, res) => {
         emergency_first TEXT NOT NULL,
         emergency_last TEXT NOT NULL,
         emergency_mobile TEXT NOT NULL,
-        id_proof_url TEXT,            -- Holds raw Base64 data URL
+        id_proof_url TEXT,
         medical_conditions TEXT,
-        payment_receipt_url TEXT,     -- Holds raw Base64 data URL
+        payment_receipt_url TEXT,
         created_at TEXT DEFAULT (datetime('now'))
       );
     `);
