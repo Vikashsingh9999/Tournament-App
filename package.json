@@ -1,0 +1,20 @@
+{
+  "name": "champions-cup-registration",
+  "version": "1.0.0",
+  "description": "Registration and management system for Champions Cup Season 1",
+  "main": "api/register.js",
+  "scripts": {
+    "start": "node setup-db.js",
+    "db:setup": "node setup-db.js"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.6.2",
+    "cloudinary": "^2.2.0",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "xlsx": "^0.18.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

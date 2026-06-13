@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard – CHAMPIONS CUP</title>
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Header -->
+  <header class="navbar admin-header">
+    <div class="container admin-header-container">
+      <div class="logo">
+        <span class="gold-text">ADMIN</span> DASHBOARD
+      </div>
+      <div class="admin-nav-actions">
+        <a href="/" class="btn-outline btn-nav-admin">Registration Portal</a>
+        <button type="button" class="btn-secondary btn-nav-admin hidden" id="btn-logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Container -->
+  <main class="container" style="padding-top: 110px; min-height: 80vh;">
+    
+    <!-- LOGIN SCREEN -->
+    <section id="login-section" class="login-section">
+      <div class="login-card glass-card">
+        <h2 class="login-title">Admin Authentication</h2>
+        <p class="login-desc">Enter the administrative password to access the participant dashboard.</p>
+        
+        <form id="login-form">
+          <div class="form-group">
+            <label for="admin-password">Password</label>
+            <input type="password" id="admin-password" name="password" required placeholder="••••••••">
+          </div>
+          <div class="login-actions">
+            <button type="submit" class="btn-primary">Access Dashboard</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- DASHBOARD VIEW -->
+    <section id="dashboard-section" class="admin-dashboard-section hidden">
+      
+      <!-- Stats widgets row -->
+      <div class="dashboard-stats-grid">
+        <div class="stat-card glass-card">
+          <span class="stat-label">TOTAL REGISTRATIONS</span>
+          <div class="stat-value text-center" id="stat-total-count">0</div>
+        </div>
+        <div class="stat-card glass-card">
+          <span class="stat-label">TOTAL FEES ESCROWED</span>
+          <div class="stat-value text-center gold-text" id="stat-total-fees">₹0</div>
+        </div>
+        <div class="stat-card glass-card">
+          <span class="stat-label">BOWLERS / BATSMEN / ALL-ROUNDERS</span>
+          <div class="stat-value text-center" id="stat-role-distribution" style="font-size: 15px; margin-top: 14px; font-weight:700;">
+            Bowl: 0 | Bat: 0 | AR: 0
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls card: Search, filter, export -->
+      <div class="table-controls-card glass-card">
+        <div class="controls-grid">
+          <div class="form-group">
+            <label for="search-input">Search Player / Email / ID</label>
+            <input type="text" id="search-input" placeholder="e.g. John or CC-001">
+          </div>
+          <div class="form-group">
+            <label for="filter-team">Filter by Team</label>
+            <select id="filter-team">
+              <option value="">All Teams</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="filter-area">Filter by Area</label>
+            <select id="filter-area">
+              <option value="">All Areas</option>
+              <option value="WALIV">WALIV</option>
+              <option value="SATEWALI">SATEWALI</option>
+              <option value="DHANIV">DHANIV</option>
+              <option value="VASAI PHATA SANTOSH BHAVAN">VASAI PHATA SANTOSH BHAVAN</option>
+              <option value="BHOIDAPADA">BHOIDAPADA</option>
+              <option value="GAURYEPADA">GAURYEPADA</option>
+              <option value="PELHAR">PELHAR</option>
+            </select>
+          </div>
+          <div class="form-group" style="justify-content: flex-end;">
+            <button type="button" class="btn-primary gold-glow" id="btn-export-excel" style="width: 100%;">
+              <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--text-inverse); margin-right: 8px;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+              Export to Excel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registrations Data Table -->
+      <div class="table-container glass-card">
+        <table class="data-table" id="registrations-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Mobile</th>
+              <th>Team</th>
+              <th>Role</th>
+              <th>Style (Bat/Bowl)</th>
+              <th>Area</th>
+              <th>Payment Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <!-- Dynamic rows will render here -->
+          </tbody>
+        </table>
+        
+        <!-- Table empty state template -->
+        <div id="no-records-view" class="no-records hidden">
+          No participant registration records found.
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Detailed User Information Modal Overlay -->
+  <div class="modal-overlay large hidden" id="details-modal">
+    <div class="modal-content admin-details-modal glass-card">
+      <div class="modal-header">
+        <h2>Participant Profile Details</h2>
+        <button type="button" class="btn-close-modal" id="btn-close-details">&times;</button>
+      </div>
+
+      <div class="modal-body" id="details-modal-body">
+        <!-- Dynanically populated details -->
+        <div class="modal-details-grid">
+          <div class="details-block">
+            <h4>Registration ID</h4>
+            <p id="det-id" class="gold-text bold"></p>
+          </div>
+          <div class="details-block">
+            <h4>Full Name</h4>
+            <p id="det-name"></p>
+          </div>
+          <div class="details-block">
+            <h4>Date of Birth</h4>
+            <p id="det-dob"></p>
+          </div>
+          <div class="details-block">
+            <h4>Gender</h4>
+            <p id="det-gender"></p>
+          </div>
+          <div class="details-block">
+            <h4>Mobile Number</h4>
+            <p id="det-mobile"></p>
+          </div>
+          <div class="details-block">
+            <h4>Email Address</h4>
+            <p id="det-email"></p>
+          </div>
+          <div class="details-block col-span-full">
+            <h4>Residential Address</h4>
+            <p id="det-address"></p>
+          </div>
+          <div class="details-block">
+            <h4>Team Name</h4>
+            <p id="det-team"></p>
+          </div>
+          <div class="details-block">
+            <h4>Eligible Region</h4>
+            <p id="det-area"></p>
+          </div>
+          <div class="details-block">
+            <h4>Player Role</h4>
+            <p id="det-role"></p>
+          </div>
+          <div class="details-block">
+            <h4>Batting / Bowling details</h4>
+            <p id="det-style"></p>
+          </div>
+          <div class="details-block col-span-full">
+            <h4>Emergency Contact</h4>
+            <p id="det-emergency"></p>
+          </div>
+          <div class="details-block col-span-full">
+            <h4>Medical Conditions / Declarations</h4>
+            <p id="det-medical"></p>
+          </div>
+        </div>
+
+        <h3 style="font-size: 15px; font-weight:700; text-transform: uppercase; margin-bottom: 16px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">Document Submissions</h3>
+        <div class="documents-section">
+          <!-- ID Proof Preview Card -->
+          <div class="doc-download-card">
+            <h4>Official ID Proof</h4>
+            <div class="doc-thumbnail-box">
+              <img id="det-id-img" src="#" alt="ID Proof Doc" class="hidden">
+              <div id="det-id-pdf" class="pdf-indicator-box hidden">
+                <svg viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V8H10c.83 0 1.5.67 1.5 1.5v0zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V8h2.5c.83 0 1.5.67 1.5 1.5v2zm4-3H19v1h1.5V11H19v2h-1.5V8h3v1.5zM9 9.5h1v1H9v-1zm5 1.5h1v1.5h-1V11zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg>
+                <span>PDF ID Document</span>
+              </div>
+            </div>
+            <a href="#" target="_blank" class="btn-secondary btn-nav-admin" id="det-id-download">Open File in New Tab</a>
+          </div>
+
+          <!-- Payment Receipt Screenshot Card -->
+          <div class="doc-download-card">
+            <h4>Payment Receipt Screenshot</h4>
+            <div class="doc-thumbnail-box">
+              <img id="det-receipt-img" src="#" alt="Payment Receipt Screenshot">
+            </div>
+            <a href="#" target="_blank" class="btn-secondary btn-nav-admin" id="det-receipt-download">Open File in New Tab</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay hidden" id="admin-loader">
+    <div class="loader-content glass-card">
+      <div class="spinner"></div>
+      <h3 id="admin-loader-title">Loading Dashboard Data...</h3>
+      <p id="admin-loader-desc">Validating credentials and retrieving latest registration sheets.</p>
+    </div>
+  </div>
+
+  <!-- Toast system -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Champions Cup Tournament. All Rights Reserved. Vasai-Virar Rubber Ball Cricket Association.</p>
+    </div>
+  </footer>
+
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHAMPIONS CUP – Rubber Ball League Tournament Season 1</title>
+  <meta name="description" content="Official registration portal for CHAMPIONS CUP Season 1 Rubber Ball League. Register your team and secure your slot now.">
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nOMQV+qRJHecyJx5ALhyIaRYtrBXS5TxApWcMEYxUNGkndLJ14DMKyGI3LNnIyKAB9hUtLIVqHRg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <div class="logo">
+        <span class="gold-text">CHAMPIONS</span> CUP
+      </div>
+      <nav class="nav-links">
+        <a href="#about">Tournament Details</a>
+        <a href="#countdown-section">Timeline</a>
+        <a href="/admin" class="btn-outline btn-nav-admin">Admin Portal</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero-section">
+    <div class="hero-bg-overlay"></div>
+    <div class="container hero-content">
+      <div class="badge">SEASON 1 • RUBBER BALL LEAGUE</div>
+      <h1 class="hero-title">CHAMPIONS <span class="gold-text">CUP</span></h1>
+      <p class="hero-subtitle">The ultimate battle for glory, power, and prestige. Bring your team, showcase your skills, and lift the ultimate rubber ball championship trophy.</p>
+      
+      <div class="tournament-meta-grid">
+        <div class="meta-item">
+          <svg class="meta-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <div>
+            <h3>VENUE</h3>
+            <p>Vasai-Virar, Palghar District</p>
+          </div>
+        </div>
+        <div class="meta-item">
+          <svg class="meta-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+          <div>
+            <h3>REGISTRATION FEE</h3>
+            <p>₹7,500 Per Player / Entry</p>
+          </div>
+        </div>
+        <div class="meta-item">
+          <svg class="meta-icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm8 3H13v-6h6v6z"/></svg>
+          <div>
+            <h3>PRIZE POOL</h3>
+            <p class="gold-text bold">Mega Cash Prizes & Trophies</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <a href="#registration-section" id="btn-hero-register" class="btn-primary">Register Now</a>
+        <a href="#about" class="btn-secondary">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Countdown Timer Section -->
+  <section id="countdown-section" class="countdown-section">
+    <div class="container">
+      <h2 class="section-title">Registration Deadline</h2>
+      <p class="section-subtitle">Hurry up! Registration closes strictly on July 8, 2026 at 23:59 IST</p>
+      
+      <div class="timer-container" id="countdown-timer">
+        <div class="time-block">
+          <span class="time-number" id="days">00</span>
+          <span class="time-label">DAYS</span>
+        </div>
+        <div class="time-block">
+          <span class="time-number" id="hours">00</span>
+          <span class="time-label">HOURS</span>
+        </div>
+        <div class="time-block">
+          <span class="time-number" id="minutes">00</span>
+          <span class="time-label">MINUTES</span>
+        </div>
+        <div class="time-block">
+          <span class="time-number" id="seconds">00</span>
+          <span class="time-label">SECONDS</span>
+        </div>
+      </div>
+      
+      <div id="closed-message" class="closed-notice hidden">
+        <svg class="notice-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <span>REGISTRATIONS ARE NOW CLOSED</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Tournament Section -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-card glass-card">
+          <h3>Tournament Guidelines</h3>
+          <ul class="guideline-list">
+            <li>Matches will be played with premium quality rubber balls.</li>
+            <li>Players must reside or be eligible from the designated regional areas.</li>
+            <li>Professional ID Proof is mandatory during the online registration process.</li>
+            <li>Strict adherence to code of conduct is required. Admin decisions are final.</li>
+            <li>Registration is confirmed only after receipt verification by the management committee.</li>
+          </ul>
+        </div>
+        <div class="about-card glass-card gold-border">
+          <h3>Eligible Areas</h3>
+          <p class="area-intro">Only players originating or belonging to the following regions in Vasai-Virar are eligible to register:</p>
+          <div class="area-tags">
+            <span class="tag">WALIV</span>
+            <span class="tag">SATEWALI</span>
+            <span class="tag">DHANIV</span>
+            <span class="tag">VASAI PHATA SANTOSH BHAVAN</span>
+            <span class="tag">BHOIDAPADA</span>
+            <span class="tag">GAURYEPADA</span>
+            <span class="tag">PELHAR</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Multi-step Registration Section -->
+  <section id="registration-section" class="registration-section">
+    <div class="container">
+      <div class="registration-container glass-card" id="form-container">
+        <h2 class="form-header-title">TOURNAMENT REGISTRATION</h2>
+        <p class="form-header-subtitle">Secure your player slot in the Champions Cup</p>
+
+        <!-- Progress Bar Indicator -->
+        <div class="steps-progress-container">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+          </div>
+          <div class="step-nodes">
+            <div class="step-node active" data-step="1">
+              <span class="node-num">1</span>
+              <span class="node-text">Personal</span>
+            </div>
+            <div class="step-node" data-step="2">
+              <span class="node-num">2</span>
+              <span class="node-text">Emergency</span>
+            </div>
+            <div class="step-node" data-step="3">
+              <span class="node-num">3</span>
+              <span class="node-text">Documents</span>
+            </div>
+            <div class="step-node" data-step="4">
+              <span class="node-num">4</span>
+              <span class="node-text">Payment</span>
+            </div>
+          </div>
+        </div>
+
+        <form id="registration-form" novalidate>
+          
+          <!-- STEP 1: Personal & Player Details -->
+          <div class="form-step active" id="step-1">
+            <h3 class="step-title">Step 1: Personal & Player Details</h3>
+            
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="first_name">First Name <span class="required">*</span></label>
+                <input type="text" id="first_name" name="first_name" required placeholder="John">
+                <span class="error-msg">First name is required</span>
+              </div>
+              <div class="form-group">
+                <label for="middle_name">Middle Name</label>
+                <input type="text" id="middle_name" name="middle_name" placeholder="David">
+              </div>
+              <div class="form-group">
+                <label for="last_name">Last Name <span class="required">*</span></label>
+                <input type="text" id="last_name" name="last_name" required placeholder="Doe">
+                <span class="error-msg">Last name is required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="dob">Date of Birth <span class="required">*</span></label>
+                <input type="date" id="dob" name="dob" required>
+                <span class="error-msg">Valid date of birth is required</span>
+              </div>
+              <div class="form-group">
+                <label for="gender">Gender <span class="required">*</span></label>
+                <select id="gender" name="gender" required>
+                  <option value="" disabled selected>Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span class="error-msg">Please select your gender</span>
+              </div>
+              <div class="form-group">
+                <label for="mobile">Mobile Number <span class="required">*</span></label>
+                <input type="tel" id="mobile" name="mobile" required placeholder="e.g. 9876543210" pattern="^[6-9]\d{9}$">
+                <span class="error-msg">Please enter a valid 10-digit Indian mobile number</span>
+              </div>
+
+              <div class="form-group col-span-2">
+                <label for="email">Email Address <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required placeholder="john.doe@example.com">
+                <span class="error-msg">Please enter a valid email address</span>
+              </div>
+              <div class="form-group">
+                <label for="team_name">Team Name <span class="required">*</span></label>
+                <input type="text" id="team_name" name="team_name" required placeholder="e.g. Mumbai Warriors">
+                <span class="error-msg">Team name is required</span>
+              </div>
+
+              <div class="form-group col-span-3">
+                <label for="address_line1">Address Line 1 <span class="required">*</span></label>
+                <input type="text" id="address_line1" name="address_line1" required placeholder="Street address, P.O. box">
+                <span class="error-msg">Address is required</span>
+              </div>
+              <div class="form-group col-span-3">
+                <label for="address_line2">Address Line 2</label>
+                <input type="text" id="address_line2" name="address_line2" placeholder="Apartment, suite, unit, building, floor">
+              </div>
+
+              <div class="form-group">
+                <label for="city">City <span class="required">*</span></label>
+                <input type="text" id="city" name="city" required placeholder="e.g. Vasai">
+                <span class="error-msg">City is required</span>
+              </div>
+              <div class="form-group">
+                <label for="state">State <span class="required">*</span></label>
+                <input type="text" id="state" name="state" required placeholder="e.g. Maharashtra">
+                <span class="error-msg">State is required</span>
+              </div>
+              <div class="form-group">
+                <label for="postal_code">Postal Code <span class="required">*</span></label>
+                <input type="text" id="postal_code" name="postal_code" required placeholder="e.g. 401208" pattern="^\d{6}$">
+                <span class="error-msg">Please enter a valid 6-digit postal code</span>
+              </div>
+
+              <div class="form-group col-span-2">
+                <label for="eligible_area">Eligible Area <span class="required">*</span></label>
+                <select id="eligible_area" name="eligible_area" required>
+                  <option value="" disabled selected>Select Area</option>
+                  <option value="WALIV">WALIV</option>
+                  <option value="SATEWALI">SATEWALI</option>
+                  <option value="DHANIV">DHANIV</option>
+                  <option value="VASAI PHATA SANTOSH BHAVAN">VASAI PHATA SANTOSH BHAVAN</option>
+                  <option value="BHOIDAPADA">BHOIDAPADA</option>
+                  <option value="GAURYEPADA">GAURYEPADA</option>
+                  <option value="PELHAR">PELHAR</option>
+                </select>
+                <span class="error-msg">Please select an eligible area</span>
+              </div>
+              <div class="form-group">
+                <label for="player_role">Player Role <span class="required">*</span></label>
+                <select id="player_role" name="player_role" required>
+                  <option value="" disabled selected>Select Role</option>
+                  <option value="Batsman">Batsman</option>
+                  <option value="Bowler">Bowler</option>
+                  <option value="All-Rounder">All-Rounder</option>
+                  <option value="Wicketkeeper Batsman">Wicketkeeper Batsman</option>
+                </select>
+                <span class="error-msg">Please select your playing role</span>
+              </div>
+
+              <div class="form-group">
+                <label for="batting_hand">Batting Hand <span class="required">*</span></label>
+                <select id="batting_hand" name="batting_hand" required>
+                  <option value="" disabled selected>Select Batting</option>
+                  <option value="Right Hand">Right Hand</option>
+                  <option value="Left Hand">Left Hand</option>
+                </select>
+                <span class="error-msg">Please select batting style</span>
+              </div>
+              <div class="form-group">
+                <label for="bowling_arm">Bowling Arm <span class="required">*</span></label>
+                <select id="bowling_arm" name="bowling_arm" required>
+                  <option value="" disabled selected>Select Arm</option>
+                  <option value="Right Arm">Right Arm</option>
+                  <option value="Left Arm">Left Arm</option>
+                  <option value="N/A">N/A (Do not bowl)</option>
+                </select>
+                <span class="error-msg">Please select bowling hand</span>
+              </div>
+              <div class="form-group">
+                <label for="bowling_type">Bowling Type <span class="required">*</span></label>
+                <select id="bowling_type" name="bowling_type" required>
+                  <option value="" disabled selected>Select Type</option>
+                  <option value="Fast">Fast</option>
+                  <option value="Medium Pace">Medium Pace</option>
+                  <option value="Off Spin">Off Spin</option>
+                  <option value="Leg Spin">Leg Spin</option>
+                  <option value="Left-Arm Orthodox">Left-Arm Orthodox</option>
+                  <option value="Left-Arm Unorthodox">Left-Arm Unorthodox</option>
+                  <option value="N/A">N/A (Do not bowl)</option>
+                </select>
+                <span class="error-msg">Please select bowling style type</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <span></span> <!-- Spacer -->
+              <button type="button" class="btn-primary btn-next">Next Step</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Emergency Contact & Health Details -->
+          <div class="form-step" id="step-2">
+            <h3 class="step-title">Step 2: Emergency Contact & Health Details</h3>
+            
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="emergency_first">Emergency First Name <span class="required">*</span></label>
+                <input type="text" id="emergency_first" name="emergency_first" required placeholder="Guardian's First Name">
+                <span class="error-msg">First name is required</span>
+              </div>
+              <div class="form-group">
+                <label for="emergency_last">Emergency Last Name <span class="required">*</span></label>
+                <input type="text" id="emergency_last" name="emergency_last" required placeholder="Guardian's Last Name">
+                <span class="error-msg">Last name is required</span>
+              </div>
+              <div class="form-group">
+                <label for="emergency_mobile">Emergency Contact Mobile <span class="required">*</span></label>
+                <input type="tel" id="emergency_mobile" name="emergency_mobile" required placeholder="Guardian's Mobile" pattern="^[6-9]\d{9}$">
+                <span class="error-msg">Enter a valid 10-digit mobile number</span>
+              </div>
+
+              <div class="form-group col-span-3">
+                <label for="medical_conditions">Medical Conditions / Allergies / Health Declarations</label>
+                <textarea id="medical_conditions" name="medical_conditions" rows="4" placeholder="Mention any medical issues or previous operations (or leave blank if none)"></textarea>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn-secondary btn-prev">Previous</button>
+              <button type="button" class="btn-primary btn-next">Next Step</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Identification Document Upload -->
+          <div class="form-step" id="step-3">
+            <h3 class="step-title">Step 3: Document Upload</h3>
+            
+            <div class="form-upload-area">
+              <label class="upload-box" id="id-upload-box">
+                <svg class="upload-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                <span class="upload-title">Upload Official ID Proof (Aadhaar / Passport / Voter ID) <span class="required">*</span></span>
+                <span class="upload-subtitle">Format: JPEG, PNG or PDF (Max Size: 5MB)</span>
+                <input type="file" id="id_proof_file" name="id_proof_file" accept=".jpg,.jpeg,.png,.pdf" required class="hidden-file-input">
+              </label>
+
+              <!-- Local File Preview Panel -->
+              <div class="preview-container hidden" id="id-preview-panel">
+                <div class="preview-card">
+                  <div class="preview-info">
+                    <span class="preview-name" id="id-file-name">filename.jpg</span>
+                    <span class="preview-size" id="id-file-size">1.2 MB</span>
+                  </div>
+                  <div class="preview-media-box">
+                    <img id="id-img-preview" src="#" alt="ID Proof Preview" class="hidden">
+                    <div id="id-pdf-preview" class="pdf-indicator-box hidden">
+                      <svg viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V8H10c.83 0 1.5.67 1.5 1.5v0zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V8h2.5c.83 0 1.5.67 1.5 1.5v2zm4-3H19v1h1.5V11H19v2h-1.5V8h3v1.5zM9 9.5h1v1H9v-1zm5 1.5h1v1.5h-1V11zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg>
+                      <span>PDF Document</span>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-danger-text" id="btn-remove-id">Remove File</button>
+                </div>
+              </div>
+              <span class="error-msg text-center display-block" id="id-upload-error">Please upload a valid ID proof</span>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn-secondary btn-prev">Previous</button>
+              <button type="button" class="btn-primary btn-next">Next Step</button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Fee Payment & Receipt Submission -->
+          <div class="form-step" id="step-4">
+            <h3 class="step-title">Step 4: Tournament Fee Payment</h3>
+            
+            <div class="payment-layout-grid">
+              <div class="payment-info-side glass-card">
+                <div class="fee-badge">
+                  <span class="fee-label">REGISTRATION FEE</span>
+                  <span class="fee-amount">₹7,500</span>
+                </div>
+                
+                <!-- GPay UPI Deep Link (visible on mobile only) -->
+                <div class="mobile-gpay-box">
+                  <a href="upi://pay?pa=mubarakk3356@okhdfcbank&pn=CHAMPIONS%20CUP&am=7500&cu=INR" class="btn-gpay">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Google_Pay_Logo.svg" alt="Google Pay" class="gpay-logo">
+                    <span>Pay via UPI / GPay</span>
+                  </a>
+                </div>
+
+                <div class="upi-text-info">
+                  <p>Scan the QR code on the right or use the UPI ID below to pay via GPay, PhonePe, Paytm, or any banking app.</p>
+                  <div class="upi-id-badge">
+                    <span>UPI ID:</span>
+                    <strong class="gold-text copyable" id="upi-address">mubarakk3356@okhdfcbank</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="payment-qr-side glass-card">
+                <div class="qr-code-wrapper">
+                  <div id="qrcode"></div>
+                </div>
+                <div class="qr-note">Scan with any UPI App</div>
+              </div>
+            </div>
+
+            <!-- Receipt Upload Section -->
+            <div class="form-upload-area margin-top-large">
+              <label class="upload-box" id="receipt-upload-box">
+                <svg class="upload-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                <span class="upload-title">Upload Payment Screenshot / Receipt <span class="required">*</span></span>
+                <span class="upload-subtitle">Format: JPEG or PNG (Max Size: 5MB)</span>
+                <input type="file" id="receipt_file" name="receipt_file" accept=".jpg,.jpeg,.png" required class="hidden-file-input">
+              </label>
+
+              <!-- Local Receipt Preview Panel -->
+              <div class="preview-container hidden" id="receipt-preview-panel">
+                <div class="preview-card">
+                  <div class="preview-info">
+                    <span class="preview-name" id="receipt-file-name">screenshot.png</span>
+                    <span class="preview-size" id="receipt-file-size">1.5 MB</span>
+                  </div>
+                  <div class="preview-media-box">
+                    <img id="receipt-img-preview" src="#" alt="Receipt Preview" class="hidden">
+                  </div>
+                  <button type="button" class="btn-danger-text" id="btn-remove-receipt">Remove File</button>
+                </div>
+              </div>
+              <span class="error-msg text-center display-block" id="receipt-upload-error">Please upload a screenshot of your transaction</span>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn-secondary btn-prev">Previous</button>
+              <button type="submit" class="btn-primary gold-glow" id="btn-submit-form">Complete Registration</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Registration Form Closed Banner -->
+      <div class="closed-banner glass-card hidden" id="registration-closed-card">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <h2>REGISTRATION CLOSED</h2>
+        <p>The registration window for Champions Cup Season 1 closed on July 8, 2026 at 23:59 IST.</p>
+        <p>If you have already registered and wish to check status, please contact the tournament directors.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay hidden" id="submit-loader">
+    <div class="loader-content glass-card">
+      <div class="spinner"></div>
+      <h3 id="loader-title">Processing Registration...</h3>
+      <p id="loader-desc">Uploading documents and securing your database record. Please do not close or refresh this page.</p>
+    </div>
+  </div>
+
+  <!-- Success Modal Overlay -->
+  <div class="modal-overlay hidden" id="success-modal">
+    <div class="modal-content glass-card success-card">
+      <div class="modal-success-icon-box">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <h2>Registration Confirmed!</h2>
+      <p>Congratulations, your registration entry has been recorded.</p>
+      
+      <div class="reg-id-display">
+        <span class="reg-id-label">YOUR REGISTRATION ID</span>
+        <strong id="success-reg-id" class="gold-text">CC-001</strong>
+      </div>
+
+      <p class="modal-notice">Keep this ID safe. The organizing committee will review your payment receipt and verify eligibility shortly. You will be notified via email once approved.</p>
+      
+      <button type="button" class="btn-primary" id="btn-close-success">Close & Return</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>&copy; 2026 Champions Cup Tournament. All Rights Reserved. Vasai-Virar Rubber Ball Cricket Association.</p>
+    </div>
+  </footer>
+
+  <!-- App Main Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
