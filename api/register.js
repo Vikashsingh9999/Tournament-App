@@ -70,7 +70,11 @@ module.exports = async (req, res) => {
   const dbAuthToken = process.env.LIBSQL_DB_AUTH_TOKEN;
 
   if (!dbUrl) {
-    return res.status(500).json({ success: false, message: "Server configuration error: Database URL not set." });
+    const keys = Object.keys(process.env).filter(k => k.startsWith('LIBSQL') || k.includes('DB') || k.includes('URL') || k.includes('PASSWORD') || k.includes('JWT'));
+    return res.status(500).json({ 
+      success: false, 
+      message: `Server configuration error: Database URL not set. Found related env keys: [${keys.join(', ')}]` 
+    });
   }
 
   const dbClient = createClient({ url: dbUrl, authToken: dbAuthToken });
