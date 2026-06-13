@@ -4,7 +4,7 @@
 
 // Config & State Variables
 const DEADLINE_ISO = "2026-07-08T23:59:00+05:30"; // Deadline: 8 July 2026, 23:59 IST
-const REGISTRATION_FEE = 7500;
+const REGISTRATION_FEE = 500;
 const UPI_ID = "mubarakk3356@okhdfcbank";
 const MERCHANT_NAME = "CHAMPIONS CUP";
 

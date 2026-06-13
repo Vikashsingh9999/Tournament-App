@@ -163,7 +163,7 @@ function updateStats(list) {
   const distributionEl = document.getElementById("stat-role-distribution");
 
   const totalCount = list.length;
-  const totalFees = totalCount * 7500;
+  const totalFees = totalCount * 500;
 
   let bowlers = 0;
   let batsmen = 0;
