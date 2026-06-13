@@ -435,20 +435,7 @@ function formatBytes(bytes, decimals = 2) {
    UPI PAYMENT QR & DEEP LINKS
    ---------------------------------------------------- */
 function initUPIPayment() {
-  const upiUrl = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${REGISTRATION_FEE}&cu=INR`;
-  
-  const qrContainer = document.getElementById("qrcode");
-  if (qrContainer) {
-    // Generate QR code (qrcode.js library loads from CDN in index.html)
-    new QRCode(qrContainer, {
-      text: upiUrl,
-      width: 160,
-      height: 160,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.M
-    });
-  }
+  // Static QR image scanner.jpeg used instead of dynamic generation
 }
 
 /* ----------------------------------------------------

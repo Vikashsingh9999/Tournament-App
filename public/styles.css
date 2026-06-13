@@ -912,7 +912,7 @@ body {
 }
 
 .mobile-gpay-box {
-  display: none; /* Shown on mobile screens */
+  display: block;
   margin-bottom: 20px;
 }
 
